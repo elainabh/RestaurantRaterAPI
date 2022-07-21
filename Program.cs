@@ -13,7 +13,6 @@ builder.Services.AddHttpsRedirection(options => options.HttpsPort = 443);
 static IHostBuilder CreateHostBuilder(string[] args) =>
 Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
 {
-webBuilder.UseStartup<Startup>();
 webBuilder.UseUrls("http://localhost:80", "https://localhost:443");
 });
 
