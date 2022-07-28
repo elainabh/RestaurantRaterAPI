@@ -40,15 +40,21 @@ namespace RestaurantRaterAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRestaurants()
         {
-            var restaurants = await _context.Restaurants.ToListAsync();
-            return Ok(restaurants);
+            var restaurants = await _context.Restaurants.Include(r => r.Ratings).ToListAsync();
+            List<RestaurantListItem> restaurantList = _context.Restaurants.Select(r => new RestaurantListItem() {
+                Id = r.Id,
+                Name = r.Name,
+                Location = r.Location,
+                AverageScore =r.AverageTotalScore,
+            }).ToList();
+            return Ok(restaurantList);
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetRestaurantsById(int id)
         {
-            var restaurant = await _context.Restaurants.FindAsync(id);
+            var restaurant = await _context.Restaurants.Include(r => r.Ratings).FirstOrDefaultAsync(r => r.Id == id);
             if (restaurant == null)
             {
                 return NotFound();
